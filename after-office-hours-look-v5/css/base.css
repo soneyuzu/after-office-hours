@@ -1,0 +1,110 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  /* svh stays stable when mobile browser chrome shows/hides (dvh would reflow the stage). */
+  height: 100svh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  font-family: var(--font-read);
+  font-kerning: normal;
+  color: var(--ink);
+  background: var(--plaster);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The wall: plaster with grain and a soft fall-off toward the edges,
+   as if lit from a single high window. */
+.wall {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-bg);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 30%, transparent 40%, color-mix(in srgb, var(--plaster-3) 70%, transparent) 100%),
+    var(--plaster);
+}
+
+.wall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 240px;
+  opacity: 0.28;
+  mix-blend-mode: multiply;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--crimson);
+  outline-offset: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Frame and corners: retired. The wall has no border. */
+.page-frame,
+.corner {
+  display: none;
+}
+
+/* Archive arrival: one quiet fade, the room settling */
+@media (prefers-reduced-motion: no-preference) {
+  .archive {
+    animation: settleIn 1s var(--ease-out) both;
+  }
+}
+
+@keyframes settleIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

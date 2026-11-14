@@ -1,0 +1,50 @@
+/* =========================================================
+   THE SCRIBBLE — the site's one gesture.
+   A pen circle like the ones on the poster, drawn around
+   whatever is "this one": the figure at the front, the file
+   pulled out, the control under the hand. Erases quickly.
+
+   Markup (decorative):
+   <svg class="scribble" viewBox="0 0 200 120" preserveAspectRatio="none"
+        aria-hidden="true" focusable="false">
+     <path pathLength="1" d="M34 74C18 40 92 8 158 22C206 33 204 86 140 104C80 120 16 104 18 66C20 32 98 12 170 30"/>
+   </svg>
+   Draw it by adding .is-marked to its parent (or via the
+   component's own hover/active rules).
+   ========================================================= */
+
+.scribble {
+  position: absolute;
+  left: -16%;
+  top: -34%;
+  width: 132%;
+  height: 168%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.scribble path {
+  fill: none;
+  stroke: var(--crimson);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  /* erase: quick */
+  transition: stroke-dashoffset 0.3s var(--ease-cut);
+}
+
+.is-marked > .scribble path {
+  stroke-dashoffset: 0;
+  /* draw: like a hand, slow at the end */
+  transition: stroke-dashoffset var(--draw) var(--ease-out) 0.08s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scribble path,
+  .is-marked > .scribble path {
+    transition: none;
+  }
+}
