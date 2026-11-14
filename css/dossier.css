@@ -1,0 +1,690 @@
+/* =========================================================
+   DOSSIER — a page from the reliquary's catalogue.
+   Left: the plate — the figure standing in a carved niche,
+   its number cut large into the plaster behind it.
+   Right: the entry — an inscription-sized name, a register,
+   and the text set like a book.
+   ========================================================= */
+
+.dossier {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dossier);
+  display: grid;
+  place-items: center;
+  padding:
+    max(var(--space-6), var(--safe-top))
+    max(var(--space-8), var(--safe-right))
+    max(var(--space-7), var(--safe-bottom))
+    max(var(--space-6), var(--safe-left));
+  background: color-mix(in srgb, var(--violet) 18%, color-mix(in srgb, var(--ink) 62%, transparent));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  transition:
+    opacity 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+
+.dossier.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
+}
+
+/* ----- The page ----- */
+
+.dossier-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(1240px, 100%);
+  height: min(800px, 100%);
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--plaster);
+  color: var(--ink);
+  box-shadow: 0 40px 80px -30px color-mix(in srgb, var(--ink) 70%, transparent);
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s var(--ease-slab);
+  user-select: text;
+}
+
+.dossier.is-open .dossier-panel {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.5s ease 0.05s,
+    transform 1s var(--ease-out) 0.05s;
+}
+
+.dossier-panel::before {
+  display: none;
+}
+
+.dossier-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: 240px;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+  z-index: 3;
+}
+
+/* ----- Running head ----- */
+
+.dossier-meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  margin: 0 28px;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--font-label);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.1em;
+  color: var(--ink-70);
+}
+
+.dossier-meta [data-file] {
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: var(--crimson);
+}
+
+/* ----- Body ----- */
+
+.dossier-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ----- The plate: a niche in the plaster ----- */
+
+.dossier-art {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 22px 0 22px 28px;
+  overflow: hidden;
+  background: var(--plaster-2);
+  box-shadow:
+    inset 0 30px 36px -24px color-mix(in srgb, var(--violet) 40%, transparent),
+    inset 18px 0 24px -20px color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+.dossier-art img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 2;
+  display: block;
+  width: auto;
+  height: 92%;
+  max-width: 94%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: translateX(-50%);
+  filter: drop-shadow(18px 10px 0 color-mix(in srgb, var(--violet) 18%, transparent));
+}
+
+.art-fig,
+.art-plate {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  font-family: var(--font-label);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.art-fig {
+  left: 16px;
+  color: var(--crimson);
+}
+
+.art-plate {
+  right: 16px;
+  color: var(--ink-50);
+}
+
+/* The plate number, cut deep into the recess */
+.file-no {
+  position: absolute;
+  z-index: 1;
+  left: 10px;
+  bottom: -0.12em;
+  font-family: var(--font-label);
+  font-size: clamp(200px, 38vh, 380px);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--violet) 35%, transparent);
+  pointer-events: none;
+}
+
+/* ----- The entry ----- */
+
+.dossier-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  padding: 26px clamp(24px, 3.6vw, 52px) 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-25) transparent;
+}
+
+.dossier-number {
+  font-family: var(--font-label);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--crimson);
+}
+
+.dossier-text h2 {
+  margin: 6px 0 0;
+  font-family: var(--font-name);
+  font-size: clamp(64px, 8.6vw, 136px);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.dossier-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dossier-info[hidden] {
+  display: none;
+}
+
+.dossier-text .role {
+  margin-top: 14px;
+  font-family: var(--font-label);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--violet);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink-25);
+  font-family: var(--font-label);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.section-label::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--crimson);
+  flex-shrink: 0;
+}
+
+/* Register: two columns, ruled */
+.dossier-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+}
+
+.stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ink-12);
+}
+
+.stat-row:nth-child(odd) {
+  padding-right: 16px;
+  border-right: 1px solid var(--ink-12);
+}
+
+.stat-row:nth-child(even) {
+  padding-left: 16px;
+}
+
+.stat-row dt {
+  font-family: var(--font-label);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.12em;
+  color: var(--ash);
+}
+
+.stat-row dd {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.dossier-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dossier-section[hidden] {
+  display: none;
+}
+
+/* Reading text: set like a book */
+.dossier-text .description,
+.dossier-text .note,
+.dossier-placeholder {
+  margin: 14px 0 0;
+  max-width: 58ch;
+  font-family: var(--font-read);
+  font-size: var(--fs-read);
+  line-height: 1.68;
+  color: color-mix(in srgb, var(--ink) 88%, transparent);
+  hyphens: auto;
+  user-select: text;
+}
+
+.dossier-placeholder {
+  margin-top: 24px;
+}
+
+/* A drop of crimson to begin the entry */
+.dossier-placeholder::first-letter {
+  float: left;
+  margin: 0.06em 0.08em 0 0;
+  font-family: var(--font-name);
+  font-size: 3.3em;
+  line-height: 0.8;
+  color: var(--crimson);
+}
+
+.dossier-text .note {
+  color: var(--ink-70);
+  font-size: var(--fs-body);
+}
+
+/* ----- Lore (Background) ----- */
+
+.dossier-background {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.dossier-background[hidden] {
+  display: none;
+}
+
+.dossier-background p {
+  margin: 18px 0 0;
+  max-width: 58ch;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding-right: var(--space-2);
+  font-family: var(--font-read);
+  font-size: var(--fs-read);
+  font-style: italic;
+  line-height: 1.72;
+  color: var(--ink);
+  white-space: pre-line;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-25) transparent;
+}
+
+/* ----- Navigation ----- */
+
+.dossier-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 22px 0 18px;
+  background: linear-gradient(to bottom, transparent, var(--plaster) 22px);
+}
+
+.dossier-nav button {
+  position: relative;
+  min-height: 44px;
+  padding: 0 4px;
+  font-family: var(--font-label);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  transition: color 0.25s ease;
+}
+
+.dossier-nav button:hover,
+.dossier-nav button:focus-visible {
+  color: var(--crimson);
+}
+
+.dossier-nav button:focus-visible {
+  outline-offset: 2px;
+}
+
+.dossier-background-btn {
+  margin-left: auto;
+}
+
+/* Lore open: the toggle is circled in crimson pen */
+.dossier-background-btn .scribble {
+  left: -14%;
+  top: -18%;
+  width: 128%;
+  height: 136%;
+}
+
+.dossier-background-btn[aria-pressed="true"] {
+  color: var(--crimson);
+}
+
+.dossier-background-btn[aria-pressed="true"] .scribble path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--draw) var(--ease-out);
+}
+
+/* ----- Colophon ----- */
+
+.dossier-cat {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  margin: 0 28px;
+  padding: 10px 0 14px;
+  border-top: 1px solid var(--ink);
+  font-family: var(--font-label);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.12em;
+  color: var(--ash);
+}
+
+/* ----- Close ----- */
+
+.dossier-close {
+  position: fixed;
+  top: max(20px, var(--safe-top));
+  right: max(20px, var(--safe-right));
+  z-index: calc(var(--z-dossier) + 1);
+  width: var(--dossier-close);
+  height: var(--dossier-close);
+  display: grid;
+  place-items: center;
+  color: var(--plaster);
+  background: var(--crimson);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.25s ease;
+}
+
+.dossier-close-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: block;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.dossier-close-icon::before,
+.dossier-close-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+}
+
+.dossier-close-icon::before { transform: translate(-50%, -50%) rotate(45deg); }
+.dossier-close-icon::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+.dossier-close:hover,
+.dossier-close:focus-visible {
+  background: var(--violet);
+}
+
+.dossier-close:hover .dossier-close-icon {
+  transform: rotate(90deg);
+}
+
+.dossier-close:focus-visible {
+  outline: 2px solid var(--plaster);
+  outline-offset: 3px;
+}
+
+/* ----- Hint ----- */
+
+.dossier-hint {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(16px, var(--safe-bottom));
+  z-index: calc(var(--z-dossier) + 1);
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--plaster) 80%, transparent);
+  pointer-events: none;
+}
+
+/* ----- Choreography: open, and turning the page ----- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .dossier.is-open .dossier-art img {
+    animation: plateRise 1.1s var(--ease-out) 0.25s both;
+  }
+
+  .dossier.is-open .file-no {
+    animation: fadeIn 1.2s ease 0.35s both;
+  }
+
+  .dossier.is-open .dossier-text h2 {
+    animation: inscribe 1s var(--ease-cut) 0.3s both;
+  }
+
+  .dossier.is-open .dossier-info,
+  .dossier.is-open .dossier-background {
+    animation: fadeIn 0.8s ease 0.5s both;
+  }
+
+  .dossier-panel.is-swapping .dossier-art img {
+    animation: plateSwap 0.6s var(--ease-out) both;
+  }
+
+  .dossier-panel.is-swapping .dossier-text h2 {
+    animation: inscribe 0.6s var(--ease-cut) both;
+  }
+
+  .dossier-panel.is-swapping .file-no {
+    animation: fadeIn 0.6s ease both;
+  }
+}
+
+@keyframes plateRise {
+  from { opacity: 0; transform: translateX(-50%) translateY(6%); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes plateSwap {
+  from { opacity: 0; transform: translateX(-47%); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+
+@keyframes inscribe {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ----- Tablet ----- */
+
+@media (max-width: 900px) {
+  .dossier {
+    padding:
+      max(var(--space-7), var(--safe-top))
+      max(var(--space-4), var(--safe-right))
+      max(var(--space-7), var(--safe-bottom))
+      max(var(--space-4), var(--safe-left));
+  }
+
+  .dossier-body {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  }
+}
+
+/* ----- Phone: plate on top; a strip of dimmed room stays above the
+   page so tap-outside still closes it and the close plate has room. */
+
+@media (max-width: 600px), (max-height: 520px) {
+  .dossier {
+    padding:
+      max(68px, calc(var(--safe-top) + 58px))
+      max(10px, var(--safe-right))
+      max(10px, var(--safe-bottom))
+      max(10px, var(--safe-left));
+  }
+
+  .dossier-panel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .dossier-meta {
+    margin: 0 16px;
+    padding: 12px 0 10px;
+  }
+
+  .dossier-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .dossier-art {
+    height: min(36svh, 330px);
+    margin: 12px 16px 0;
+  }
+
+  .file-no {
+    font-size: 150px;
+  }
+
+  .dossier-text {
+    padding: 18px 16px 0;
+    touch-action: pan-y;
+  }
+
+  .dossier-text .description {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .dossier-text h2 {
+    font-size: clamp(52px, 17vw, 72px);
+  }
+
+  .dossier-nav {
+    gap: 18px;
+  }
+
+  .dossier-nav button {
+    font-size: 13px;
+  }
+
+  .dossier-cat {
+    margin: 0 16px;
+    padding-bottom: max(12px, var(--safe-bottom));
+  }
+
+  .dossier-hint {
+    top: max(24px, calc(var(--safe-top) + 18px));
+    bottom: auto;
+    left: max(14px, var(--safe-left));
+    right: calc(var(--dossier-close-sm) + 24px);
+    text-align: left;
+  }
+
+  .dossier-close {
+    top: max(10px, var(--safe-top));
+    right: max(10px, var(--safe-right));
+    width: var(--dossier-close-sm);
+    height: var(--dossier-close-sm);
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .dossier {
+    padding-top: max(12px, var(--safe-top));
+    padding-right: max(64px, calc(var(--safe-right) + 56px));
+  }
+
+  .dossier-body {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-rows: 1fr;
+  }
+
+  .dossier-art {
+    height: auto;
+    margin: 12px 0 12px 16px;
+  }
+
+  .dossier-text h2 {
+    font-size: clamp(40px, 12vh, 64px);
+  }
+
+  .dossier-hint {
+    display: none;
+  }
+
+  .dossier-close {
+    width: var(--dossier-close-xs);
+    height: var(--dossier-close-xs);
+  }
+}
